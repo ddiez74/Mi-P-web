@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard docente – Ciencias Básicas LAR (UTN)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #0b1220;
+      --card: #020617;
+      --accent: #22d3ee;
+      --accent-soft: rgba(34, 211, 238, 0.18);
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border-soft: #1f2933;
+      --radius-xl: 18px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0b1120 0, #020617 60%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to right, rgba(10, 16, 30, 0.98), rgba(15, 23, 42, 0.9));
+      border-bottom: 1px solid #111827;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(34, 211, 238, 0.9);
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    nav a {
+      font-size: 0.78rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all 0.16s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--accent);
+    }
+
+    nav a.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 20px auto 40px auto;
+      padding: 0 18px 30px 18px;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 880px) {
+      .intro {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 55%),
+                  var(--card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px 16px 16px;
+    }
+
+    .card-soft {
+      background: #020617;
+      border-radius: var(--radius-xl);
+      border: 1px solid #111827;
+      padding: 14px 16px 16px 16px;
+    }
+
+    .section-label {
+      font-size: 0.74rem;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .muted {
+      color: var(--text-soft);
+      font-size: 0.8rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .grid-5,
+    .grid-2 {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+      margin-bottom: 20px;
+    }
+
+    .grid-5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (max-width: 1080px) {
+      .grid-5 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .grid-5,
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .course-card {
+      position: relative;
+      padding: 10px 11px 12px 11px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.9));
+      border-radius: 14px;
+      border: 1px solid #111827;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .course-card:hover {
+      border-color: rgba(34, 211, 238, 0.55);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+    }
+
+    .course-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .course-tagline {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 7px;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.74rem;
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .btn-link span {
+      font-size: 0.9em;
+    }
+
+    section {
+      margin-bottom: 22px;
+    }
+
+    .section-header {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .box {
+      margin-top: 8px;
+      padding: 9px 10px;
+      border-radius: 14px;
+      border: 1px solid #111827;
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .box-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-soft);
+      margin-bottom: 3px;
+    }
+
+    ul {
+      margin-left: 16px;
+      margin-top: 4px;
+      font-size: 0.83rem;
+      color: var(--text-main);
+    }
+
+    li {
+      margin-bottom: 3px;
+    }
+
+    details {
+      margin-top: 7px;
+      border-radius: 12px;
+      border: 1px solid #111827;
+      background: #020617;
+      padding: 7px 9px 8px 9px;
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    details[open] {
+      border-color: rgba(34, 211, 238, 0.55);
+      background: radial-gradient(circle at top, rgba(34, 211, 238, 0.06), #020617 55%);
+    }
+
+    details summary::marker {
+      display: none;
+    }
+
+    .summary-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .summary-chevron {
+      font-size: 0.8rem;
+      transition: transform 0.16s ease;
+    }
+
+    details[open] .summary-chevron {
+      transform: rotate(90deg);
+    }
+
+    details > div {
+      margin-top: 6px;
+      font-size: 0.82rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 5px 6px;
+      border-bottom: 1px solid #111827;
+      text-align: left;
+    }
+
+    th {
+      color: var(--text-soft);
+      font-weight: 500;
+      font-size: 0.76rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 18px 20px 18px;
+      border-top: 1px solid #111827;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-main">
+          <span class="brand-dot"></span>
+          <span>Dashboard docente – Ciencias Básicas LAR (UTN)</span>
+        </div>
+        <div class="brand-sub">
+          Mapa de competencias, espacios curriculares y actividades para la Licenciatura en Administración Rural
+        </div>
+      </div>
+      <nav id="top-nav">
+        <a href="#mapa-general" class="active">Mapa general</a>
+        <a href="#ciencias-basicas">Ciencias básicas</a>
+        <a href="#modelizacion">Modelización</a>
+        <a href="#calculo">Cálculo</a>
+        <a href="#matematica-economica">Mat. decisiones económicas</a>
+        <a href="#analisis-datos">Análisis de datos</a>
+        <a href="#optimizacion">Optimización</a>
+        <a href="#actividades">Actividades por competencias</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Intro -->
+    <section id="mapa-general" class="intro">
+      <div class="card">
+        <div class="section-label">Propósito del dashboard</div>
+        <h2>Enseñanza de las Ciencias Básicas con enfoque basado en competencias</h2>
+        <p style="margin-top: 4px;">
+          Este tablero está pensado para que los docentes de la Licenciatura en Administración Rural
+          puedan ver de un vistazo cómo se articulan las Ciencias Básicas con las
+          <strong>competencias generales</strong> del perfil de egreso y con
+          <strong>actividades auténticas</strong> del ámbito agropecuario.
+        </p>
+        <p class="muted" style="margin-top: 6px;">
+          Usalo como mapa de planificación: seleccioná un espacio curricular, revisá sus competencias
+          específicas, descriptores de aprendizaje y ejemplos de tareas contextualizadas para rediseñar
+          guías, parciales y proyectos integradores.
+        </p>
+        <div style="margin-top: 10px; display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="pill">
+            <span class="pill-dot"></span> Carrera: Licenciatura en Administración Rural (UTN)
+          </span>
+          <span class="pill">
+            Basado en currículo por competencias
+          </span>
+          <span class="pill">
+            Foco en Ciencias Básicas cuantitativas
+          </span>
+        </div>
+      </div>
+
+      <div class="card-soft">
+        <div class="section-label">Cómo leer este tablero</div>
+        <p>
+          Cada bloque de Ciencias Básicas incluye:
+        </p>
+        <ul>
+          <li><strong>Descripción docente</strong> del espacio curricular.</li>
+          <li><strong>Competencias específicas</strong> que se trabajan desde ese espacio.</li>
+          <li><strong>Vínculo</strong> con las competencias generales del perfil profesional.</li>
+          <li><strong>Descriptores de aprendizaje</strong> (contenidos orientados a competencias).</li>
+          <li><strong>Ideas de actividades auténticas</strong> en clave agropecuaria.</li>
+        </ul>
+        <p class="muted" style="margin-top: 6px;">
+          Todo el contenido está resumido y adaptado del documento de innovación curricular en LAR, para
+          servir como guía práctica al momento de diseñar clases, evaluaciones y proyectos.
+        </p>
+      </div>
+    </section>
+
+    <!-- Mapa de las cinco ciencias básicas -->
+    <section id="ciencias-basicas">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Área de ciencias básicas</div>
+          <h3>Los cinco espacios curriculares cuantitativos</h3>
+        </div>
+        <span class="badge">Vista rápida para planificación</span>
+      </div>
+
+      <div class="grid-5">
+        <a href="#modelizacion" class="course-card">
+          <div class="course-title">Modelización y estructuras matemáticas</div>
+          <div class="course-tagline">Álgebra y modelos para representar problemas agropecuarios.</div>
+          <div class="tag-row">
+            <span class="tag">Ecuaciones e inecuaciones</span>
+            <span class="tag">Matrices</span>
+            <span class="tag">Modelos de recursos</span>
+          </div>
+          <div class="btn-link">
+            <span>Ver detalle</span> <span>↳</span>
+          </div>
+        </a>
+
+        <a href="#calculo" class="course-card">
+          <div class="course-title">Cálculo aplicado a la gestión agropecuaria</div>
+          <div class="course-tagline">Funciones, variación y optimización de procesos productivos.</div>
+          <div class="tag-row">
+            <span class="tag">Funciones</span>
+            <span class="tag">Derivadas</span>
+            <span class="tag">Integrales</span>
+          </div>
+          <div class="btn-link">
+            <span>Ver detalle</span> <span>↳</span>
+          </div>
+        </a>
+
+        <a href="#matematica-economica" class="course-card">
+          <div class="course-title">Matemática para la toma de decisiones económicas</div>
+          <div class="course-tagline">Matemática financiera para analizar inversiones y financiamiento.</div>
+          <div class="tag-row">
+            <span class="tag">VPN / TIR</span>
+            <span class="tag">Interés</span>
+            <span class="tag">Flujos de fondos</span>
+          </div>
+          <div class="btn-link">
+            <span>Ver detalle</span> <span>↳</span>
+          </div>
+        </a>
+
+        <a href="#analisis-datos" class="course-card">
+          <div class="course-title">Análisis de datos y probabilidad aplicada</div>
+          <div class="course-tagline">Estadística y probabilidad con datos reales del sector rural.</div>
+          <div class="tag-row">
+            <span class="tag">Estadística descriptiva</span>
+            <span class="tag">Inferencia</span>
+            <span class="tag">Regresión</span>
+          </div>
+          <div class="btn-link">
+            <span>Ver detalle</span> <span>↳</span>
+          </div>
+        </a>
+
+        <a href="#optimizacion" class="course-card">
+          <div class="course-title">Optimización de procesos productivos</div>
+          <div class="course-tagline">Programación lineal, logística y simulación de escenarios.</div>
+          <div class="tag-row">
+            <span class="tag">Recursos</span>
+            <span class="tag">Transporte</span>
+            <span class="tag">Teoría de colas</span>
+          </div>
+          <div class="btn-link">
+            <span>Ver detalle</span> <span>↳</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Modelización y estructuras matemáticas -->
+    <section id="modelizacion">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Espacio curricular</div>
+          <h3>Modelización y estructuras matemáticas</h3>
+        </div>
+        <div class="flex-row">
+          <span class="badge">Ex Álgebra</span>
+          <span class="badge">Foco: modelos algebraicos en administración rural</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card-soft">
+          <p>
+            Introduce herramientas algebraicas para <strong>representar y resolver problemas</strong>
+            de administración agropecuaria: planificación de insumos, asignación de recursos,
+            análisis de oferta y demanda, etc., con fuerte énfasis en la modelización.
+          </p>
+
+          <div class="box">
+            <div class="box-title">Competencias específicas</div>
+            <ul>
+              <li>Construir modelos con ecuaciones e inecuaciones que representen situaciones productivas y financieras rurales.</li>
+              <li>Aplicar sistemas de ecuaciones y matrices para planificar costos, producción y uso de recursos.</li>
+              <li>Resolver problemas agropecuarios a partir de modelos algebraicos, interpretando los resultados en clave de decisión.</li>
+              <li>Usar software matemático para simular escenarios y analizar tendencias en la gestión agropecuaria.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-soft">
+          <div class="box">
+            <div class="box-title">Aporte a competencias generales del perfil</div>
+            <ul>
+              <li>Diseñar planes estratégicos de producción a partir de funciones y modelos de relación entre variables.</li>
+              <li>Analizar información financiera básica mediante relaciones algebraicas (costos, ingresos, resultado).</li>
+              <li>Integrar herramientas digitales en la lectura y simulación de escenarios económicos agropecuarios.</li>
+            </ul>
+          </div>
+
+          <details>
+            <summary>
+              <span class="summary-label">Descriptores de aprendizaje (síntesis)</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <ul>
+                <li>Introducción a la modelización matemática en administración rural.</li>
+                <li>Ecuaciones e inecuaciones en una y varias variables en contextos agropecuarios.</li>
+                <li>Sistemas de ecuaciones lineales aplicados a planificación de costos y producción.</li>
+                <li>Álgebra matricial básica: tipos de matrices y operaciones con sentido productivo.</li>
+                <li>Uso de software (planillas, CAS) para representar y analizar modelos.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-label">Ejemplo de actividad auténtica</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <p class="muted">
+                Análisis del <strong>ratio de endeudamiento</strong> en una empresa agropecuaria:
+              </p>
+              <ul>
+                <li>Elegir una empresa real o ficticia y relevar datos de activos, pasivos e ingresos.</li>
+                <li>Definir indicadores de endeudamiento y construir restricciones algebraicas.</li>
+                <li>Plantear distintos escenarios (suba de tasas, cambios en precios de productos).</li>
+                <li>Elaborar un informe donde se justifiquen las decisiones de financiamiento tomadas.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cálculo aplicado -->
+    <section id="calculo">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Espacio curricular</div>
+          <h3>Cálculo aplicado a la gestión agropecuaria</h3>
+        </div>
+        <div class="flex-row">
+          <span class="badge">Ex Análisis Matemático</span>
+          <span class="badge">Foco: variación, optimización y acumulación</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card-soft">
+          <p>
+            Desarrolla herramientas de cálculo diferencial e integral para analizar
+            <strong>funciones económicas y productivas</strong>, estudiar tasas de variación y
+            optimizar costos, rendimientos y uso de recursos en la empresa rural.
+          </p>
+
+          <div class="box">
+            <div class="box-title">Competencias específicas</div>
+            <ul>
+              <li>Analizar el comportamiento de funciones que modelan producción, costos e ingresos.</li>
+              <li>Aplicar derivadas para estudiar marginalidades y encontrar óptimos productivos.</li>
+              <li>Utilizar integrales para estimar volúmenes, costos acumulados y producciones totales.</li>
+              <li>Usar software de cálculo para ajustar curvas y analizar datos productivos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-soft">
+          <div class="box">
+            <div class="box-title">Aporte a competencias generales del perfil</div>
+            <ul>
+              <li>Interpretar datos productivos y económicos mediante modelos funcionales.</li>
+              <li>Gestionar empresas optimizando rendimientos y minimizando costos con criterios cuantitativos.</li>
+              <li>Apoyar estudios de investigación aplicando análisis de variabilidad y tendencias.</li>
+            </ul>
+          </div>
+
+          <details>
+            <summary>
+              <span class="summary-label">Descriptores de aprendizaje (síntesis)</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <ul>
+                <li>Ajuste de curvas y modelos en series de datos agropecuarios.</li>
+                <li>Análisis gráfico y analítico de funciones con interpretación económica.</li>
+                <li>Derivadas y tasas de cambio aplicadas a costos marginales y rendimientos.</li>
+                <li>Integrales para estimar producción acumulada y otros indicadores.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-label">Ejemplo de actividad auténtica</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <p class="muted">
+                Optimización del <strong>nivel de producción</strong> de un cultivo:
+              </p>
+              <ul>
+                <li>Tomar datos reales o simulados de producción vs. superficie o insumos.</li>
+                <li>Ajustar una función que describa la relación (por ejemplo, cuadrática o logística).</li>
+                <li>Calcular derivada, encontrar puntos críticos e interpretar el máximo.</li>
+                <li>Discutir restricciones reales (clima, mercado, costos) frente al óptimo teórico.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Matemática para la toma de decisiones económicas -->
+    <section id="matematica-economica">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Espacio curricular</div>
+          <h3>Matemática para la toma de decisiones económicas</h3>
+        </div>
+        <div class="flex-row">
+          <span class="badge">Ex Matemática Financiera</span>
+          <span class="badge">Foco: inversiones y financiamiento agropecuario</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card-soft">
+          <p>
+            Proporciona herramientas matemático–financieras para evaluar
+            <strong>inversiones, créditos y alternativas de financiamiento</strong> en empresas rurales,
+            incorporando análisis de riesgo y valor del dinero en el tiempo.
+          </p>
+
+          <div class="box">
+            <div class="box-title">Competencias específicas</div>
+            <ul>
+              <li>Aplicar modelos para calcular VPN, TIR y periodo de recupero en proyectos agropecuarios.</li>
+              <li>Analizar tasas de interés y costos financieros en distintas modalidades de crédito.</li>
+              <li>Realizar análisis de sensibilidad ante cambios de precios, tasas y rendimientos.</li>
+              <li>Simular escenarios económicos con hojas de cálculo y software financiero.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-soft">
+          <div class="box">
+            <div class="box-title">Aporte a competencias generales del perfil</div>
+            <ul>
+              <li>Evaluar la viabilidad económica de proyectos agropecuarios.</li>
+              <li>Diseñar estrategias financieras alineadas con la sostenibilidad de la empresa.</li>
+              <li>Apoyar la toma de decisiones económicas con criterios cuantitativos y análisis de riesgo.</li>
+            </ul>
+          </div>
+
+          <details>
+            <summary>
+              <span class="summary-label">Descriptores de aprendizaje (síntesis)</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <ul>
+                <li>Valor del dinero en el tiempo: interés simple y compuesto.</li>
+                <li>Instrumentos de inversión y crédito: tasas nominales y efectivas.</li>
+                <li>Modelos de evaluación de proyectos: VPN, TIR, payback.</li>
+                <li>Amortización de préstamos y comparación de alternativas de financiamiento.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-label">Ejemplo de actividad auténtica</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <p class="muted">
+                Comparación de <strong>dos proyectos de inversión</strong> en una explotación agropecuaria:
+              </p>
+              <ul>
+                <li>Definir dos alternativas (ej. riego tecnificado vs. incorporación de maquinaria).</li>
+                <li>Construir flujos de fondos a varios años con supuestos razonables.</li>
+                <li>Calcular VPN y TIR para cada proyecto, y analizar sensibilidad frente a precios.</li>
+                <li>Justificar la elección desde la perspectiva de un administrador rural.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Análisis de datos y probabilidad aplicada -->
+    <section id="analisis-datos">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Espacio curricular</div>
+          <h3>Análisis de datos y probabilidad aplicada</h3>
+        </div>
+        <div class="flex-row">
+          <span class="badge">Ex Estadística</span>
+          <span class="badge">Foco: lectura de datos y evaluación de riesgos</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card-soft">
+          <p>
+            Aborda la estadística descriptiva, la inferencia y la probabilidad desde problemas
+            del sector agropecuario, promoviendo el uso de <strong>datos reales</strong> y software
+            especializado para fundamentar decisiones.
+          </p>
+
+          <div class="box">
+            <div class="box-title">Competencias específicas</div>
+            <ul>
+              <li>Describir y resumir datos productivos y económicos de forma rigurosa.</li>
+              <li>Aplicar modelos de probabilidad e inferencia para evaluar riesgos y comparar estrategias.</li>
+              <li>Construir y analizar modelos de regresión y correlación en contextos rurales.</li>
+              <li>Utilizar software estadístico para gestionar bases de datos y visualizar información.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-soft">
+          <div class="box">
+            <div class="box-title">Aporte a competencias generales del perfil</div>
+            <ul>
+              <li>Interpretar datos productivos, económicos y ambientales para diseñar estrategias.</li>
+              <li>Participar en estudios de caracterización regional y análisis de mercados.</li>
+              <li>Respaldar proyectos de investigación aplicada con análisis cuantitativo.</li>
+            </ul>
+          </div>
+
+          <details>
+            <summary>
+              <span class="summary-label">Descriptores de aprendizaje (síntesis)</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <ul>
+                <li>Estadística descriptiva aplicada a series de datos del sector rural.</li>
+                <li>Distribuciones de probabilidad y predicción de eventos productivos.</li>
+                <li>Inferencia estadística: estimación y pruebas de hipótesis.</li>
+                <li>Regresión, correlación y modelos predictivos básicos.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="summary-label">Ejemplo de actividad auténtica</span>
+              <span class="summary-chevron">›</span>
+            </summary>
+            <div>
+              <p class="muted">
+                Análisis de <strong>rendimientos de un cultivo</strong> en distintas campañas:
+              </p>
+              <ul>
+                <li>Relevar datos históricos de rendimiento por hectárea y variables asociadas.</li>
+                <li>Calcular medidas de tendencia, dispersión y construir gráficos.</li>
+                <li>Plantear un modelo de regresión y discutir su ajuste e interpretación.</li>
+                <li>Evaluar escenarios futuros bajo distintos supuestos climáticos o de precios.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Optimización de procesos productivos -->
+    <section id="optimizacion">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Espacio curricular</div>
+          <h3>Optimización de procesos productivos</h3>
+        </div>
+        <div class="flex-row">
+          <span class="badge">Ex Investigación Operativa</span>
+          <span class="badge">Foco: modelos de decisión y logística agroindustrial</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card-soft
